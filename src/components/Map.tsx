@@ -275,6 +275,10 @@ export default function Map({ reports, selectedReportId, onSelectReport }: MapPr
         </div>
       `;
 
+      marker.on("click", () => {
+        map.flyTo([hotspot.lat, hotspot.lng], 12, { animate: true, duration: 1 });
+      });
+
       marker.bindPopup(popupContent);
     });
   }, []);
@@ -296,6 +300,7 @@ interface SearchResult {
   display_name: string;
   lat: string;
   lon: string;
+  boundingbox?: string[];
 }
 
 function SmartSearch({ mapInstanceRef }: { mapInstanceRef: React.RefObject<L.Map | null> }) {
@@ -345,15 +350,22 @@ function SmartSearch({ mapInstanceRef }: { mapInstanceRef: React.RefObject<L.Map
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleSelectLocation = (latStr: string, lonStr: string, displayName: string) => {
+  const handleSelectLocation = (latStr: string, lonStr: string, displayName: string, boundingbox?: string[]) => {
     const lat = parseFloat(latStr);
     const lon = parseFloat(lonStr);
     const map = mapInstanceRef.current;
     if (map) {
-      map.flyTo([lat, lon], 14, {
-        animate: true,
-        duration: 1.5,
-      });
+      if (boundingbox && boundingbox.length === 4) {
+        // [lat_min, lat_max, lon_min, lon_max] is Nominatim format
+        const southWest = L.latLng(parseFloat(boundingbox[0]), parseFloat(boundingbox[2]));
+        const northEast = L.latLng(parseFloat(boundingbox[1]), parseFloat(boundingbox[3]));
+        map.fitBounds(L.latLngBounds(southWest, northEast), { maxZoom: 14, animate: true, duration: 1.5 });
+      } else {
+        map.flyTo([lat, lon], 12, {
+          animate: true,
+          duration: 1.5,
+        });
+      }
     }
     setQuery("");
     setIsOpen(false);
@@ -396,7 +408,7 @@ function SmartSearch({ mapInstanceRef }: { mapInstanceRef: React.RefObject<L.Map
           {results.map((res) => (
             <div
               key={res.place_id}
-              onClick={() => handleSelectLocation(res.lat, res.lon, res.display_name)}
+              onClick={() => handleSelectLocation(res.lat, res.lon, res.display_name, res.boundingbox)}
               className="px-4 py-2.5 hover:bg-[#1f293d]/50 cursor-pointer transition-colors border-b border-white/5 last:border-0 flex gap-2.5 items-start"
             >
               <MapPin className="h-3.5 w-3.5 text-[#11d493] flex-shrink-0 mt-0.5" />

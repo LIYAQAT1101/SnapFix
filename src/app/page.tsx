@@ -427,7 +427,7 @@ export default function Home() {
           );
         }, 50);
       } else {
-        alert(`Submission failed: ${err.message || "Ensure backend is running at http://localhost:3001"}`);
+        setSubmitError(`Network Error: ${err.message || "Cannot connect to server. Ensure backend is running."}`);
       }
     }
   };
@@ -851,18 +851,15 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Civic Validation Error Toast */}
+              {/* Error Toast */}
               {submitError && (
                 <div className="bg-red-500/10 border border-red-500/20 text-red-400 p-4 rounded-xl text-xs flex flex-col gap-1 transition-all duration-300">
                   <div className="flex items-center gap-2 font-bold uppercase tracking-wider text-[10px]">
                     <ShieldAlert className="h-4 w-4 text-red-500 flex-shrink-0" />
-                    Civic Validation Failed
+                    Error
                   </div>
                   <p className="text-slate-300 leading-relaxed text-[11px] mt-1">
                     {submitError}
-                  </p>
-                  <p className="text-[9px] text-slate-500 font-semibold mt-1">
-                    Please upload a clear, relevant photo of the civic issue.
                   </p>
                 </div>
               )}
