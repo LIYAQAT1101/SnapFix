@@ -32,7 +32,7 @@ export default function VerifyPage() {
         <div className="bg-[#2563EB] px-6 py-10 text-white text-center rounded-b-3xl md:rounded-t-[2.5rem] md:rounded-b-none relative">
           <div className="absolute top-4 left-4">
             <span className="text-lg font-black tracking-tighter text-white uppercase" style={{ fontFamily: 'Impact, sans-serif' }}>
-              ARTIQ
+              SnapFix
             </span>
           </div>
           <div className="mx-auto w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mb-4 backdrop-blur-sm">
@@ -115,7 +115,7 @@ export default function VerifyPage() {
         {/* Footer actions inside the card for mobile */}
         <div className="p-6 bg-gray-50 border-t border-black/5 md:rounded-b-[2.5rem]">
           <p className="text-xs text-center text-black/40 mb-4">
-            Secured by ArtiQ Blockchain
+            Secured by SnapFix Blockchain
           </p>
           <button className="w-full py-3 rounded-full border border-black/10 text-sm font-medium hover:bg-black/5 transition-colors">
             Share Certificate

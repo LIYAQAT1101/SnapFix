@@ -15,7 +15,7 @@ export class QrService {
     }
 
     // In a real scenario, use a QR generation library like 'qrcode'
-    const qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://artiq.com/verify/${artwork.verificationSlug}`;
+    const qrImageUrl = `https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://SnapFix.com/verify/${artwork.verificationSlug}`;
 
     return this.prisma.qrCode.create({
       data: {

@@ -28,8 +28,8 @@ async function bootstrap() {
 
   // Swagger Documentation Setup
   const config = new DocumentBuilder()
-    .setTitle('ArtiQ API')
-    .setDescription('Enterprise API for ArtiQ Artisan Verification Platform')
+    .setTitle('SnapFix API')
+    .setDescription('Enterprise API for SnapFix Artisan Verification Platform')
     .setVersion('1.0')
     .addBearerAuth()
     .build();
