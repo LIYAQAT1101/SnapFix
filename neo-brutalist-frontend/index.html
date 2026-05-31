@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ArtiQ - Authentic Kashmiri Handicrafts</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;700&family=Space+Grotesk:wght@500;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- Three.js and Vanta.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+
+    <style>
+        :root {
+            /* Colors */
+            --bg-cream: #fffdf2;
+            --text-black: #1a1a1a;
+            --accent-pink: #ff6b9d;
+            --accent-blue: #4facfe;
+            --accent-yellow: #ffdf40;
+            --border-black: #000000;
+            
+            /* Typography */
+            --font-heading: 'Space Grotesk', sans-serif;
+            --font-body: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+
+            /* Neobrutalism values */
+            --border-width: 3px;
+            --shadow-hard: 6px 6px 0px 0px var(--border-black);
+            --border-radius: 20px;
+            --transition-bounce: all 0.2s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--text-black);
+            background-color: transparent; /* Handled by vanta */
+            overflow-x: hidden;
+        }
+
+        #vanta-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--font-heading);
+            text-transform: uppercase;
+        }
+
+        .tag {
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            font-weight: 700;
+            padding: 5px 10px;
+            border: var(--border-width) solid var(--border-black);
+            border-radius: 50px;
+            background-color: var(--accent-yellow);
+            display: inline-block;
+            margin-bottom: 1rem;
+            box-shadow: 3px 3px 0px 0px var(--border-black);
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Buttons */
+        .btn {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 1.1rem;
+            padding: 12px 24px;
+            cursor: pointer;
+            border: var(--border-width) solid var(--border-black);
+            border-radius: 50px;
+            background-color: var(--accent-pink);
+            color: var(--text-black);
+            box-shadow: var(--shadow-hard);
+            transition: var(--transition-bounce);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            text-transform: uppercase;
+        }
+
+        .btn:hover {
+            transform: translate(4px, 4px);
+            box-shadow: 0px 0px 0px 0px var(--border-black);
+        }
+
+        .btn-blue { background-color: var(--accent-blue); }
+        .btn-yellow { background-color: var(--accent-yellow); }
+        .btn-white { background-color: var(--bg-cream); }
+
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1000px;
+            background-color: var(--bg-cream);
+            border: var(--border-width) solid var(--border-black);
+            border-radius: 50px;
+            box-shadow: var(--shadow-hard);
+            z-index: 100;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 30px;
+        }
+
+        .logo {
+            font-family: var(--font-heading);
+            font-size: 1.5rem;
+            font-weight: 800;
+            text-decoration: none;
+            color: var(--text-black);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+            list-style: none;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--text-black);
+            font-family: var(--font-mono);
+            font-weight: 700;
+            font-size: 1rem;
+            position: relative;
+        }
+        
+        .nav-links a:hover {
+            color: var(--accent-pink);
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            padding-top: 100px; /* offset for nav */
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            font-size: 4.5rem;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 0px var(--accent-yellow);
+        }
+
+        .hero-text p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            line-height: 1.6;
+            max-width: 500px;
+            font-weight: 500;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* 3D Card */
+        .card-3d-wrapper {
+            perspective: 1000px;
+            width: 100%;
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        .card-3d {
+            background-color: var(--accent-blue);
+            border: var(--border-width) solid var(--border-black);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow-hard);
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease;
+            position: relative;
+        }
+
+        .card-3d::before {
+            content: '';
+            position: absolute;
+            inset: -15px;
+            border: 2px dashed var(--border-black);
+            border-radius: 30px;
+            z-index: -1;
+            transform: translateZ(-20px);
+        }
+
+        .card-3d-content {
+            transform: translateZ(50px);
+            background-color: var(--bg-cream);
+            border: var(--border-width) solid var(--border-black);
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .qr-mock {
+            width: 150px;
+            height: 150px;
+            background-color: var(--text-black);
+            margin: 0 auto 15px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--bg-cream);
+            font-size: 3rem;
+        }
+
+        /* Grid Section */
+        .section {
+            padding: 100px 0;
+            background-color: transparent;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-header h2 {
+            font-size: 3rem;
+            display: inline-block;
+            background-color: var(--accent-pink);
+            padding: 5px 20px;
+            border: var(--border-width) solid var(--border-black);
+            box-shadow: var(--shadow-hard);
+            transform: rotate(-2deg);
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .feature-card {
+            background-color: var(--bg-cream);
+            border: var(--border-width) solid var(--border-black);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            box-shadow: var(--shadow-hard);
+            transition: var(--transition-bounce);
+        }
+
+        .feature-card:hover {
+            transform: translate(4px, 4px);
+            box-shadow: 0px 0px 0px 0px var(--border-black);
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 70px;
+            height: 70px;
+            background-color: var(--accent-yellow);
+            border: var(--border-width) solid var(--border-black);
+            border-radius: 50%;
+        }
+
+        .feature-card:nth-child(2) .feature-icon { background-color: var(--accent-pink); }
+        .feature-card:nth-child(3) .feature-icon { background-color: var(--accent-blue); }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .feature-card p {
+            line-height: 1.5;
+            font-weight: 500;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 100px 0 150px;
+        }
+
+        .cta-box {
+            background-color: var(--accent-yellow);
+            border: var(--border-width) solid var(--border-black);
+            border-radius: var(--border-radius);
+            padding: 60px;
+            text-align: center;
+            box-shadow: var(--shadow-hard);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-box h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-box p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+            position: relative;
+            z-index: 2;
+        }
+
+        .social-icons {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .social-icon {
+            width: 50px;
+            height: 50px;
+            background-color: var(--bg-cream);
+            border: var(--border-width) solid var(--border-black);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            color: var(--text-black);
+            text-decoration: none;
+            box-shadow: 3px 3px 0px 0px var(--border-black);
+            transition: var(--transition-bounce);
+        }
+
+        .social-icon:hover {
+            transform: translate(2px, 2px);
+            box-shadow: 0px 0px 0px 0px var(--border-black);
+            background-color: var(--accent-pink);
+        }
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .hero-buttons {
+                justify-content: center;
+            }
+            .hero-text h1 { font-size: 3.5rem; }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 3D Background -->
+    <div id="vanta-bg"></div>
+
+    <!-- Navigation -->
+    <nav>
+        <a href="#" class="logo">ArtiQ.</a>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#how-it-works">How It Works</a></li>
+            <li><a href="#verify">Verify</a></li>
+        </ul>
+        <a href="#join" class="btn btn-yellow" style="padding: 8px 16px; font-size: 0.9rem;">Join Now</a>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero container">
+        <div class="hero-content">
+            <div class="hero-text">
+                <div class="tag">#ProtectingHeritage</div>
+                <h1>True Kashmiri Art. Verified.</h1>
+                <p>ArtiQ is the ultimate authenticity platform for Kashmiri handicrafts. We protect real artisans and give tourists confidence through secure QR verification.</p>
+                <div class="hero-buttons">
+                    <a href="#verify" class="btn">Scan a Product <i class="fa-solid fa-qrcode"></i></a>
+                    <a href="#artisans" class="btn btn-white">For Artisans</a>
+                </div>
+            </div>
+            
+            <div class="card-3d-wrapper">
+                <div class="card-3d" id="tilt-card">
+                    <div class="card-3d-content">
+                        <div class="tag" style="background-color: var(--accent-pink);">Authentic Item</div>
+                        <div class="qr-mock">
+                            <i class="fa-solid fa-qrcode"></i>
+                        </div>
+                        <h3 style="margin-bottom: 10px;">Pashmina Shawl</h3>
+                        <p style="font-family: var(--font-mono); font-size: 0.8rem; margin-bottom: 10px;">Artisan: <strong>Ahmad Bhat</strong></p>
+                        <p style="font-size: 0.9rem; margin-bottom: 15px;">Verified by Kesar-Eye</p>
+                        <button class="btn btn-yellow" style="width: 100%; justify-content: center;">View Details</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Grid -->
+    <section id="features" class="section container">
+        <div class="section-header">
+            <h2>The ArtiQ Ecosystem</h2>
+        </div>
+        <div class="grid-container">
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-shield-halved"></i></div>
+                <h3>Fraud Prevention</h3>
+                <p>Every authentic handicraft is tagged with a unique, secure QR code linked directly to the creator's verified profile, stopping counterfeits in their tracks.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-store"></i></div>
+                <h3>Artisan Profiles</h3>
+                <p>Artisans undergo rigorous verification with government ID checks, earning a "Blue Tick" that proves their authenticity to global buyers.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon"><i class="fa-solid fa-chart-line"></i></div>
+                <h3>Advanced Analytics</h3>
+                <p>Track where products are scanned globally. Empower artisans with data on which designs and regions are attracting the most interest.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section container">
+        <div class="cta-box">
+            <h2>Ready to protect authentic art?</h2>
+            <p>Join the movement to preserve Kashmiri heritage. Whether you are a creator or a buyer, ArtiQ is your guarantee of true craftsmanship.</p>
+            <a href="#" class="btn btn-blue" style="font-size: 1.3rem; padding: 15px 40px;">Get Started Today</a>
+            
+            <div class="social-icons">
+                <a href="#" class="social-icon"><i class="fa-brands fa-twitter"></i></a>
+                <a href="#" class="social-icon"><i class="fa-brands fa-instagram"></i></a>
+                <a href="#" class="social-icon"><i class="fa-brands fa-github"></i></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scripts -->
+    <script>
+        // Vanta.js Background setup
+        VANTA.NET({
+            el: "#vanta-bg",
+            mouseControls: true,
+            touchControls: true,
+            gyroControls: false,
+            minHeight: 200.00,
+            minWidth: 200.00,
+            scale: 1.00,
+            scaleMobile: 1.00,
+            color: 0x1a1a1a,      // Black lines
+            backgroundColor: 0xfffdf2, // Cream background
+            points: 12.00,
+            maxDistance: 22.00,
+            spacing: 18.00
+        });
+
+        // 3D Card Tilt Effect
+        const tiltCard = document.getElementById('tilt-card');
+        const wrapper = document.querySelector('.card-3d-wrapper');
+
+        wrapper.addEventListener('mousemove', (e) => {
+            const rect = wrapper.getBoundingClientRect();
+            // Calculate mouse position relative to the center of the card
+            const x = e.clientX - rect.left - rect.width / 2;
+            const y = e.clientY - rect.top - rect.height / 2;
+
+            // Adjust sensitivity
+            const rotateX = -(y / rect.height) * 30; // Max 15deg rotation
+            const rotateY = (x / rect.width) * 30;
+
+            tiltCard.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
+        });
+
+        wrapper.addEventListener('mouseleave', () => {
+            // Reset rotation when mouse leaves
+            tiltCard.style.transform = 'rotateX(0deg) rotateY(0deg)';
+        });
+    </script>
+</body>
+</html>

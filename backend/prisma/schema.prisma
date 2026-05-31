@@ -1,0 +1,165 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  ARTISAN
+  TOURIST
+}
+
+enum VerificationStatus {
+  PENDING
+  UNDER_REVIEW
+  APPROVED
+  REJECTED
+  SUSPENDED
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  role      Role     @default(TOURIST)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  artisanProfile ArtisanProfile?
+  sessions       Session[]
+  adminLogs      AdminLog[]
+}
+
+model ArtisanProfile {
+  id                 String             @id @default(uuid())
+  userId             String             @unique
+  fullName           String
+  phone              String
+  address            String
+  district           String
+  aadhaarNumber      String?
+  panNumber          String?
+  craftCategory      String
+  verificationStatus VerificationStatus @default(PENDING)
+  rejectionReason    String?
+  isVerified         Boolean            @default(false)
+
+  // Documents
+  aadhaarUrl     String?
+  panUrl         String?
+  selfieUrl      String?
+  workshopImages String[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user     User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  artworks Artwork[]
+}
+
+model Artwork {
+  id               String  @id @default(uuid())
+  artisanId        String
+  name             String
+  category         String
+  description      String
+  materialUsed     String
+  handmadeHours    Int
+  originDistrict   String
+  heritageInfo     String
+  giTagStatus      Boolean @default(false)
+  price            Float?
+  verificationSlug String  @unique @default(uuid())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  artisan    ArtisanProfile @relation(fields: [artisanId], references: [id], onDelete: Cascade)
+  media      ArtworkMedia[]
+  qrCode     QrCode?
+  fraudFlags FraudFlag[]
+}
+
+model ArtworkMedia {
+  id        String   @id @default(uuid())
+  artworkId String
+  url       String
+  type      String // IMAGE or VIDEO
+  createdAt DateTime @default(now())
+
+  artwork Artwork @relation(fields: [artworkId], references: [id], onDelete: Cascade)
+}
+
+model QrCode {
+  id          String    @id @default(uuid())
+  artworkId   String    @unique
+  qrImageUrl  String
+  scanCount   Int       @default(0)
+  lastScanned DateTime?
+  expiresAt   DateTime?
+
+  createdAt DateTime @default(now())
+
+  artwork  Artwork   @relation(fields: [artworkId], references: [id], onDelete: Cascade)
+  scanLogs ScanLog[]
+}
+
+model ScanLog {
+  id        String  @id @default(uuid())
+  qrCodeId  String
+  ipAddress String?
+  country   String?
+  device    String?
+  browser   String?
+
+  scannedAt DateTime @default(now())
+
+  qrCode QrCode @relation(fields: [qrCodeId], references: [id], onDelete: Cascade)
+}
+
+model Notification {
+  id      String  @id @default(uuid())
+  userId  String
+  title   String
+  message String
+  isRead  Boolean @default(false)
+
+  createdAt DateTime @default(now())
+}
+
+model AdminLog {
+  id      String @id @default(uuid())
+  adminId String
+  action  String
+  details String
+
+  createdAt DateTime @default(now())
+
+  admin User @relation(fields: [adminId], references: [id], onDelete: Cascade)
+}
+
+model FraudFlag {
+  id        String  @id @default(uuid())
+  artworkId String?
+  reason    String
+  status    String  @default("OPEN") // OPEN, RESOLVED
+
+  createdAt DateTime @default(now())
+
+  artwork Artwork? @relation(fields: [artworkId], references: [id], onDelete: SetNull)
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  userId       String
+  refreshToken String
+  expiresAt    DateTime
+
+  createdAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}

@@ -1,0 +1,184 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+@import "leaflet/dist/leaflet.css";
+
+@custom-variant dark (&:is(.dark *));
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-sans);
+  
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+}
+
+:root {
+  /* SnapFix Deep Dark Theme Default */
+  --background: oklch(0.12 0.02 250); /* #0B0F19 equivalent */
+  --foreground: oklch(0.97 0.01 240);
+  
+  --card: oklch(0.18 0.02 245); /* Lighter dark blue-gray */
+  --card-foreground: oklch(0.97 0.01 240);
+  
+  --popover: oklch(0.18 0.02 245);
+  --popover-foreground: oklch(0.97 0.01 240);
+  
+  --primary: oklch(0.78 0.17 165); /* Vibrant Green #11d493 equivalent */
+  --primary-foreground: oklch(0.12 0.02 250);
+  
+  --secondary: oklch(0.24 0.02 245);
+  --secondary-foreground: oklch(0.97 0.01 240);
+  
+  --muted: oklch(0.24 0.02 245);
+  --muted-foreground: oklch(0.70 0.02 240);
+  
+  --accent: oklch(0.78 0.17 165);
+  --accent-foreground: oklch(0.12 0.02 250);
+  
+  --destructive: oklch(0.60 0.22 25); /* Crimson / Red */
+  --destructive-foreground: oklch(0.97 0.01 240);
+  
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
+  --ring: oklch(0.78 0.17 165 / 50%);
+  
+  --radius: 0.75rem;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Custom leaflet tweaks for dark theme map */
+.leaflet-container {
+  background-color: #0b0f19 !important;
+  border-radius: var(--radius) !important;
+  overflow: hidden;
+  pointer-events: auto !important;
+  touch-action: pan-x pan-y !important;
+  cursor: grab !important;
+}
+
+.leaflet-popup-content-wrapper, .leaflet-popup-tip {
+  background: #161C2C !important;
+  color: #F8FAFC !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
+
+.leaflet-popup-close-button {
+  color: #94a3b8 !important;
+}
+
+/* Custom Ping Animation for Leaflet Markers */
+@keyframes ping {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
+}
+
+/* GSAP/CSS Bouncing Dot Animation */
+.dot-loader span {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #11d493;
+  margin: 0 4px;
+  animation: bounce 0.6s infinite alternate;
+}
+.dot-loader span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.dot-loader span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes bounce {
+  to {
+    transform: translateY(-12px);
+    opacity: 0.4;
+  }
+}
+
+/* Custom styling for Leaflet layers control switcher to match premium dark glassmorphism */
+.leaflet-control-layers {
+  background: rgba(22, 28, 44, 0.8) !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  color: #f8fafc !important;
+  border-radius: 12px !important;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3) !important;
+  font-family: inherit !important;
+  padding: 8px 12px !important;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+}
+
+.leaflet-control-layers-toggle {
+  background-color: transparent !important;
+  border-radius: 8px !important;
+  transition: all 0.2s ease !important;
+}
+
+.leaflet-control-layers:not(.leaflet-control-layers-expanded) {
+  background: rgba(22, 28, 44, 0.9) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  border-radius: 8px !important;
+  width: 36px !important;
+  height: 36px !important;
+}
+
+.leaflet-control-layers-list {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+}
+
+.leaflet-control-layers-base label {
+  cursor: pointer !important;
+  margin: 6px 0 !important;
+  display: flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  padding: 4px 8px !important;
+  border-radius: 6px !important;
+  transition: background-color 0.2s ease !important;
+}
+
+.leaflet-control-layers-base label:hover {
+  background-color: rgba(255, 255, 255, 0.05) !important;
+}
+
+.leaflet-control-layers-base input[type="radio"] {
+  accent-color: #11d493 !important;
+  cursor: pointer !important;
+  width: 14px !important;
+  height: 14px !important;
+}
